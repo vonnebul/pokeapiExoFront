@@ -8,8 +8,9 @@ import TypePokemon from './TypePokemon';
 
 
 function MonPokedex() {
+    //const serv = "https://api-poke.ipssi.cloud"
     const serv = "http://localhost:8000"
-    const url= serv+ "/api/infoPokemon/"
+    const url= serv+ "/api/infoPokemon?id="
     const [pokeRecherche, setPokeRecherche] = useState();
     const [affichePokemon, setAffichePokemon]= useState(null);
     const [storagePokemon, setStoragePokemon]= useState()
@@ -31,12 +32,22 @@ function MonPokedex() {
       setAffichePokemon(null)
       setStoragePokemon(JSON.parse(localStorage.getItem('MonPokedex')))
     }
-    const deletePokedex= (e)=>{
+    const deletePokedex= async (e)=>{
       e.preventDefault()
+      const res = await axios.get(serv+'/api/pokeDelete?caretaking=&information=&autorize=&ipssi=&warning=')
+      console.log(res.data)
+      if(res.data.info === true){
+        alert('info='+res.data.result)
+      }
+      else{
+        alert('info='+res.data.result)
+      }
       localStorage.removeItem('MonPokedex')
       setStoragePokemon(JSON.parse(localStorage.getItem('MonPokedex')))
     }
+ 
     useEffect(()=>{
+      //localStorage.setItem('warning', 'e5K');
       setStoragePokemon(JSON.parse(localStorage.getItem('MonPokedex')))
     },[])
 
@@ -96,7 +107,7 @@ function MonPokedex() {
                 ))}
                 </div>
                 <div className='row mt-3'>
-                <Form className="espacement">
+                <Form className="espacement"onSubmit={deletePokedex} >
                   <Button variant="outline-danger" type="submit">
                         vider le pokedex
                   </Button>

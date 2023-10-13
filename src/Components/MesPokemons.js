@@ -12,10 +12,12 @@ const MesPokemons=()=>{
     const [pokeData,setPokeData]=useState([]);
     const [Chargement,setChargement]=useState(true);
     const [url,setUrl]=useState("http://localhost:8000/api/pokemon")
+    //const [url,setUrl]=useState("https://api-poke.ipssi.cloud")
     const [nextUrl,setNextUrl]=useState();
     const [previousUrl, setPreviousUrl]= useState()
 
     useEffect(()=>{
+        localStorage.setItem('information', 'LiT');
         getAllPokemon();
     },[url])
 
@@ -23,8 +25,7 @@ const MesPokemons=()=>{
     const getAllPokemon=async()=>{
         setChargement(true)
         const res=await axios.get(url);
-        console.log("ok get all pokemon")
-        getPokemon(res.data.data)
+        getPokemon(res.data)
         setChargement(false)
     }
 
@@ -42,11 +43,13 @@ const MesPokemons=()=>{
 
     const ajout = async(e)=>{
             e.preventDefault()
-            let res = await axios.get("https://pokeapi.co/api/v2/pokemon/"+e.target[0].value)
+            let res = await axios.get("http://localhost:8000/api/infoPokemon?id="+e.target[0].value)
             if(localStorage.getItem('MonPokedex')==null){
                 localStorage.setItem('MonPokedex', JSON.stringify([]))
             }
-            
+            let test = JSON.parse(localStorage.getItem('MonPokedex'))
+            test.push(res.data)
+            localStorage.setItem('MonPokedex', JSON.stringify(test))
     }
     
     return (
